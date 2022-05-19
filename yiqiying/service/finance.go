@@ -127,8 +127,8 @@ type QueryAccountBalanceSheetList struct {
 	OccurredCreditUnitPrice int     `json:"occurredCreditUnitPrice"`
 }
 
-// queryAccountBalanceSheet 科目余额表接口
-func (c *Finance) queryAccountBalanceSheet(req QueryAccountBalanceSheetRequest) (result QueryAccountBalanceSheetResponse, err error) {
+// QueryAccountBalanceSheet 科目余额表接口
+func (c *Finance) QueryAccountBalanceSheet(req QueryAccountBalanceSheetRequest) (result QueryAccountBalanceSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("POST", QueryAccountBalanceSheetUrl, reader)
@@ -196,8 +196,8 @@ type SelectAssetsDebtSheetList struct {
 	AmountOfPrePeriod       float64 `json:"amountOfPrePeriod"`       // 上期发生额 （小企业-利-年）
 }
 
-// queryAccountBalanceSheet 科目余额表接口
-func (c *Finance) selectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (result SelectAssetsDebtSheetResponse, err error) {
+// SelectAssetsDebtSheet 科目余额表接口
+func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (result SelectAssetsDebtSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", SelectAssetsDebtSheetUrl, reader)
@@ -269,8 +269,8 @@ type SelectIncomeSheetList struct {
 	AmountOfPrePeriod       float64 `json:"amountOfPrePeriod"`       // 上期发生额 （小企业-利-年）
 }
 
-// selectIncomeSheet 利润表接口
-func (c *Finance) selectIncomeSheet(req SelectIncomeSheetRequest) (result SelectIncomeSheetResponse, err error) {
+// SelectIncomeSheet 利润表接口
+func (c *Finance) SelectIncomeSheet(req SelectIncomeSheetRequest) (result SelectIncomeSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", SelectIncomeSheetUrl, reader)
@@ -325,8 +325,8 @@ type GetMonthCashFlowsStatementSheetList struct {
 	PrevYearAmount        float64 `json:"prevYearAmount"`        // 上年累计发生额
 }
 
-// getMonthCashFlowsStatement 现金流量表接口
-func (c *Finance) getMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatementSheetRequest) (result GetMonthCashFlowsStatementSheetResponse, err error) {
+// GetMonthCashFlowsStatementSheet 现金流量表接口
+func (c *Finance) GetMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatementSheetRequest) (result GetMonthCashFlowsStatementSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", GetMonthCashFlowsStatementSheetUrl, reader)
@@ -398,8 +398,8 @@ type SelectQuarterIncomeSheetList struct {
 	AmountOfPrePeriod       float64 `json:"amountOfPrePeriod"`       // 上期发生额 （小企业-利-年）
 }
 
-// selectQuarterIncomeSheet 利润表季报接口
-func (c *Finance) selectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) (result SelectQuarterIncomeSheetResponse, err error) {
+// SelectQuarterIncomeSheet 利润表季报接口
+func (c *Finance) SelectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) (result SelectQuarterIncomeSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", SelectQuarterIncomeSheetUrl, reader)
@@ -472,8 +472,8 @@ type GetAllYearMonthFinancialPositionStatementSheetList struct {
 	AmountOfPrePeriod       float64 `json:"amountOfPrePeriod"`       // 上期发生额 （小企业-利-年）
 }
 
-// getAllYearMonthFinancialPositionStatementSheet 资产负债表全年接口
-func (c *Finance) getAllYearMonthFinancialPositionStatementSheet(req GetAllYearMonthFinancialPositionStatementSheetRequest) (result GetAllYearMonthFinancialPositionStatementSheetResponse, err error) {
+// GetAllYearMonthFinancialPositionStatementSheet 资产负债表全年接口
+func (c *Finance) GetAllYearMonthFinancialPositionStatementSheet(req GetAllYearMonthFinancialPositionStatementSheetRequest) (result GetAllYearMonthFinancialPositionStatementSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", GetAllYearMonthFinancialPositionStatementSheetUrl, reader)
@@ -545,8 +545,8 @@ type GetAllYearMonthIncomeStatementSheetList struct {
 	AmountOfPrePeriod       float64 `json:"amountOfPrePeriod"`       // 上期发生额 （小企业-利-年）
 }
 
-// getAllYearMonthCashFlowsStatementSheet 利润表全年接口
-func (c *Finance) getAllYearMonthIncomeStatementSheet(req GetAllYearMonthIncomeStatementSheetRequest) (result GetAllYearMonthIncomeStatementSheetResponse, err error) {
+// GetAllYearMonthIncomeStatementSheet 利润表全年接口
+func (c *Finance) GetAllYearMonthIncomeStatementSheet(req GetAllYearMonthIncomeStatementSheetRequest) (result GetAllYearMonthIncomeStatementSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", GetAllYearMonthIncomeStatementSheetUrl, reader)
@@ -601,8 +601,8 @@ type GetAllYearMonthCashFlowsStatementSheetList struct {
 	PrevYearAmount        float64 `json:"prevYearAmount"`        // 上年累计发生额
 }
 
-// getAllYearMonthIncomeStatementSheet 现金流量表全年接口
-func (c *Finance) getAllYearMonthCashFlowsStatementSheet(req GetAllYearMonthCashFlowsStatementSheetRequest) (result GetAllYearMonthCashFlowsStatementSheetResponse, err error) {
+// GetAllYearMonthCashFlowsStatementSheet 现金流量表全年接口
+func (c *Finance) GetAllYearMonthCashFlowsStatementSheet(req GetAllYearMonthCashFlowsStatementSheetRequest) (result GetAllYearMonthCashFlowsStatementSheetResponse, err error) {
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("GET", GetAllYearMonthCashFlowsStatementSheetUrl, reader)

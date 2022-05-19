@@ -95,8 +95,8 @@ func (c *Customer) setHeader(signature string, httpRequest *http.Request) {
 	httpRequest.Header.Set("xReqNonce", c.Context.XReqNonce)
 }
 
-// queryCustomers 查询客户信息
-func (c *Customer) queryCustomers(req QueryCustomersRequest) (result QueryCustomersResponse, err error) {
+// QueryCustomers 查询客户信息
+func (c *Customer) QueryCustomers(req QueryCustomersRequest) (result QueryCustomersResponse, err error) {
 	customersReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(customersReq)
 	httpRequest, err := http.NewRequest("POST", QueryCustomersUrl, reader)
@@ -135,8 +135,8 @@ type AddCustomerResponse struct {
 	Body string           `json:"body"`
 }
 
-// addCustomer 新增客户
-func (c *Customer) addCustomer(req AddCustomerRequest) (result AddCustomerResponse, err error) {
+// AddCustomer 新增客户
+func (c *Customer) AddCustomer(req AddCustomerRequest) (result AddCustomerResponse, err error) {
 	customersReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(customersReq)
 	httpRequest, err := http.NewRequest("POST", AddCustomerUrl, reader)
@@ -181,8 +181,8 @@ type BatchAssignRolesResponse struct {
 	Body string           `json:"body"`
 }
 
-// batchAssignRoles 批量派工
-func (c *Customer) batchAssignRoles(req BatchAssignRolesRequest) (result BatchAssignRolesResponse, err error) {
+// BatchAssignRoles 批量派工
+func (c *Customer) BatchAssignRoles(req BatchAssignRolesRequest) (result BatchAssignRolesResponse, err error) {
 	customersReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(customersReq)
 	httpRequest, err := http.NewRequest("POST", BatchAssignRolesUrl, reader)
@@ -228,8 +228,8 @@ type UpdateCustomerResponse struct {
 	Body string           `json:"body"`
 }
 
-// updateCustomer 更新客户信息
-func (c *Customer) updateCustomer(req UpdateCustomerRequest) (result UpdateCustomerResponse, err error) {
+// UpdateCustomer 更新客户信息
+func (c *Customer) UpdateCustomer(req UpdateCustomerRequest) (result UpdateCustomerResponse, err error) {
 	customersReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(customersReq)
 	httpRequest, err := http.NewRequest("POST", UpdateCustomerUrl, reader)
