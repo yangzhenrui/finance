@@ -15,19 +15,18 @@ type YiQiYing struct {
 	ctx *context.Context
 }
 
-const version = "1.0.0"
-
 // NewYiQiYing 实例化亿企赢API
 func NewYiQiYing(cfg *config.Config) *YiQiYing {
 	timestamp := time.Now().UnixNano() / 1e6
 	xReqNonce := strings.Replace(uuid.NewV4().String(), "-", "", -1)
-
+	version := "1.0.0"
 	signatureHandle := credential.NewDefaultSignature(cfg.AppKey, cfg.AppSecret, timestamp, version, xReqNonce, credential.CacheKeyYiQiYingPrefix, cfg.Cache)
 	ctx := &context.Context{
 		Config:          cfg,
 		SignatureHandle: signatureHandle,
 		Timestamp:       timestamp,
 		XReqNonce:       xReqNonce,
+		Version:         version,
 	}
 	return &YiQiYing{ctx}
 }
