@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"github.com/yangzhenrui/finance/util"
 	"github.com/yangzhenrui/finance/yiqiying/context"
 	"io/ioutil"
@@ -13,10 +14,10 @@ import (
 
 const (
 	// GetTaxListUrl 查询税种信息接口
-	GetTaxListUrl = "https://openapi.17win.com//gateway/openyqdz/tax/info/getTaxList"
+	GetTaxListUrl = "https://openapi.17win.com/gateway/openyqdz/tax/info/getTaxList"
 
 	// GetReportUrl 查询税种报表数据接口
-	GetReportUrl = "https://openapi.17win.com//gateway/openyqdz/tax/info/getReport"
+	GetReportUrl = "https://openapi.17win.com/gateway/openyqdz/tax/info/getReport"
 )
 
 type Tax struct {
@@ -37,9 +38,9 @@ func (c *Tax) setHeader(signature string, httpRequest *http.Request) {
 }
 
 type GetTaxListRequest struct {
-	CustomerId string `json:"customerId"`
-	Period     string `json:"period"`
-	TaxCode    string `json:"taxCode"`
+	CustomerId string `json:"customerId" form:"customerId" url:"customerId"`
+	Period     string `json:"period" form:"period" url:"period"`
+	TaxCode    string `json:"taxCode" form:"taxCode" url:"taxCode"`
 }
 
 type GetTaxListResponse struct {
@@ -73,9 +74,12 @@ type GetTaxList struct {
 
 // GetTaxList 查询税种信息接口
 func (c *Tax) GetTaxList(req GetTaxListRequest) (result GetTaxListResponse, err error) {
-	taxReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(taxReq)
-	httpRequest, err := http.NewRequest("POST", GetTaxListUrl, reader)
+	uriArr, _ := query.Values(req)
+	if uriArr.Get("taxCode") == "" {
+		uriArr.Del("taxCode")
+	}
+	url := fmt.Sprintf("%v?%v", GetTaxListUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return

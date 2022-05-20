@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"github.com/yangzhenrui/finance/util"
 	"github.com/yangzhenrui/finance/yiqiying/context"
 	"io/ioutil"
@@ -158,9 +159,9 @@ func (c *Finance) QueryAccountBalanceSheet(req QueryAccountBalanceSheetRequest) 
 }
 
 type SelectAssetsDebtSheetRequest struct {
-	CustomerId     string `json:"customerId"`
-	AccountPeriod  string `json:"accountPeriod"`
-	ReclassifyFlag string `json:"reclassifyFlag,omitempty"`
+	CustomerId     string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod  string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
+	ReclassifyFlag string `json:"reclassifyFlag,omitempty" form:"reclassifyFlag" url:"reclassifyFlag"`
 }
 
 type SelectAssetsDebtSheetResponse struct {
@@ -196,11 +197,16 @@ type SelectAssetsDebtSheetList struct {
 	AmountOfPrePeriod       float64 `json:"amountOfPrePeriod"`       // 上期发生额 （小企业-利-年）
 }
 
-// SelectAssetsDebtSheet 科目余额表接口
+// SelectAssetsDebtSheet 资产负债表接口
 func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (result SelectAssetsDebtSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", SelectAssetsDebtSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	hasRf := 1
+	if uriArr.Get("reclassifyFlag") == "" {
+		uriArr.Del("reclassifyFlag")
+		hasRf = 0
+	}
+	url := fmt.Sprintf("%v?%v", GetTaxListUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -210,7 +216,9 @@ func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (resul
 	c.setHeader(signature, httpRequest)
 	httpRequest.Header.Set("customerId", req.CustomerId)
 	httpRequest.Header.Set("accountPeriod", req.AccountPeriod)
-	httpRequest.Header.Set("reclassifyFlag", req.ReclassifyFlag)
+	if hasRf == 1 {
+		httpRequest.Header.Set("reclassifyFlag", req.ReclassifyFlag)
+	}
 
 	client := &http.Client{}
 	response, err := client.Do(httpRequest)
@@ -232,8 +240,8 @@ func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (resul
 }
 
 type SelectIncomeSheetRequest struct {
-	CustomerId    string `json:"customerId"`
-	AccountPeriod string `json:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
 }
 
 type SelectIncomeSheetResponse struct {
@@ -304,8 +312,8 @@ func (c *Finance) SelectIncomeSheet(req SelectIncomeSheetRequest) (result Select
 }
 
 type GetMonthCashFlowsStatementSheetRequest struct {
-	CustomerId    string `json:"customerId"`
-	AccountPeriod string `json:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
 }
 
 type GetMonthCashFlowsStatementSheetResponse struct {
@@ -360,9 +368,9 @@ func (c *Finance) GetMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatement
 }
 
 type SelectQuarterIncomeSheetRequest struct {
-	CustomerId     string `json:"customerId"`
-	AccountPeriod  string `json:"accountPeriod"`
-	ReclassifyFlag string `json:"reclassifyFlag"`
+	CustomerId     string `json:"customerId" form:"customerId"`
+	AccountPeriod  string `json:"accountPeriod" form:"accountPeriod"`
+	ReclassifyFlag string `json:"reclassifyFlag" form:"reclassifyFlag"`
 }
 
 type SelectQuarterIncomeSheetResponse struct {
@@ -434,9 +442,9 @@ func (c *Finance) SelectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) 
 }
 
 type GetAllYearMonthFinancialPositionStatementSheetRequest struct {
-	CustomerId     string `json:"customerId"`
-	AccountPeriod  string `json:"accountPeriod"`
-	ReclassifyFlag string `json:"reclassifyFlag"`
+	CustomerId     string `json:"customerId" form:"customerId"`
+	AccountPeriod  string `json:"accountPeriod" form:"accountPeriod"`
+	ReclassifyFlag string `json:"reclassifyFlag" form:"reclassifyFlag"`
 }
 
 type GetAllYearMonthFinancialPositionStatementSheetResponse struct {
@@ -508,8 +516,8 @@ func (c *Finance) GetAllYearMonthFinancialPositionStatementSheet(req GetAllYearM
 }
 
 type GetAllYearMonthIncomeStatementSheetRequest struct {
-	CustomerId    string `json:"customerId"`
-	AccountPeriod string `json:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
 }
 
 type GetAllYearMonthIncomeStatementSheetResponse struct {
@@ -580,8 +588,8 @@ func (c *Finance) GetAllYearMonthIncomeStatementSheet(req GetAllYearMonthIncomeS
 }
 
 type GetAllYearMonthCashFlowsStatementSheetRequest struct {
-	CustomerId    string `json:"customerId"`
-	AccountPeriod string `json:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
 }
 
 type GetAllYearMonthCashFlowsStatementSheetResponse struct {
