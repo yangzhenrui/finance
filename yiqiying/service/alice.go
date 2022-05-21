@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/yangzhenrui/finance/credential"
 	"github.com/yangzhenrui/finance/util"
 	"github.com/yangzhenrui/finance/yiqiying/context"
 	"io/ioutil"
@@ -59,6 +60,7 @@ func (c *Alice) GetCloseInfo(req GetCloseInfoRequest) (result GetCloseInfoRespon
 	aliceReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(aliceReq)
 	httpRequest, err := http.NewRequest("POST", GetCloseInfoUrl, reader)
+	c.SignatureHandle = credential.NewDefaultSignature(nil, c.AppKey, c.AppSecret, c.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return

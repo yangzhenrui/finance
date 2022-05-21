@@ -1,10 +1,10 @@
 package service
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/google/go-querystring/query"
+	"github.com/yangzhenrui/finance/credential"
 	"github.com/yangzhenrui/finance/util"
 	"github.com/yangzhenrui/finance/yiqiying/context"
 	"io/ioutil"
@@ -75,17 +75,32 @@ type GetTaxList struct {
 // GetTaxList 查询税种信息接口
 func (c *Tax) GetTaxList(req GetTaxListRequest) (result GetTaxListResponse, err error) {
 	uriArr, _ := query.Values(req)
+	hasTc := 1
 	if uriArr.Get("taxCode") == "" {
 		uriArr.Del("taxCode")
+		hasTc = 0
 	}
 	url := fmt.Sprintf("%v?%v", GetTaxListUrl, uriArr.Encode())
 	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(nil, c.AppKey, c.AppSecret, &req.CustomerId, &req.Period, nil, &req.TaxCode, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
 	}
 
+	// 请求头设置
 	c.setHeader(signature, httpRequest)
+	if c.CustomerId != nil {
+		httpRequest.Header.Set("customerId", req.CustomerId)
+	}
+	if c.Period != nil {
+		httpRequest.Header.Set("period", req.Period)
+	}
+	if hasTc == 1 {
+		httpRequest.Header.Set("taxCode", req.TaxCode)
+	}
+
 	client := &http.Client{}
 	response, err := client.Do(httpRequest)
 	defer response.Body.Close()
@@ -106,9 +121,9 @@ func (c *Tax) GetTaxList(req GetTaxListRequest) (result GetTaxListResponse, err 
 }
 
 type GetReportRequest struct {
-	CustomerId string `json:"customerId"`
-	Period     string `json:"period"`
-	TaxCode    string `json:"taxCode"`
+	CustomerId string `json:"customerId" url:"customerId"`
+	Period     string `json:"period" url:"period"`
+	TaxCode    string `json:"taxCode" url:"taxCode"`
 }
 
 type GetReportResponse struct {
@@ -181,15 +196,21 @@ type OtherParamMap struct {
 
 // GetReport 查询税种报表数据接口
 func (c *Tax) GetReport(req GetReportRequest) (result GetReportResponse, err error) {
-	taxReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(taxReq)
-	httpRequest, err := http.NewRequest("POST", GetReportUrl, reader)
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", GetReportUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(nil, c.AppKey, c.AppSecret, &req.CustomerId, &req.Period, nil, &req.TaxCode, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
 	}
 
+	// 请求头设置
 	c.setHeader(signature, httpRequest)
+	httpRequest.Header.Set("customerId", req.CustomerId)
+	httpRequest.Header.Set("period", req.Period)
+	httpRequest.Header.Set("taxCode", req.TaxCode)
 	client := &http.Client{}
 	response, err := client.Do(httpRequest)
 	defer response.Body.Close()

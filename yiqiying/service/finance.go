@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/go-querystring/query"
+	"github.com/yangzhenrui/finance/credential"
 	"github.com/yangzhenrui/finance/util"
 	"github.com/yangzhenrui/finance/yiqiying/context"
 	"io/ioutil"
@@ -133,6 +134,7 @@ func (c *Finance) QueryAccountBalanceSheet(req QueryAccountBalanceSheetRequest) 
 	financeReq, err := json.Marshal(&req)
 	reader := bytes.NewReader(financeReq)
 	httpRequest, err := http.NewRequest("POST", QueryAccountBalanceSheetUrl, reader)
+	c.SignatureHandle = credential.NewDefaultSignature(nil, c.AppKey, c.AppSecret, c.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -205,8 +207,10 @@ func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (resul
 		uriArr.Del("reclassifyFlag")
 		hasRf = 0
 	}
-	url := fmt.Sprintf("%v?%v", GetTaxListUrl, uriArr.Encode())
+	url := fmt.Sprintf("%v?%v", SelectAssetsDebtSheetUrl, uriArr.Encode())
 	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, &req.ReclassifyFlag, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -240,8 +244,8 @@ func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (resul
 }
 
 type SelectIncomeSheetRequest struct {
-	CustomerId    string `json:"customerId" form:"customerId"`
-	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
 }
 
 type SelectIncomeSheetResponse struct {
@@ -279,9 +283,11 @@ type SelectIncomeSheetList struct {
 
 // SelectIncomeSheet 利润表接口
 func (c *Finance) SelectIncomeSheet(req SelectIncomeSheetRequest) (result SelectIncomeSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", SelectIncomeSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", SelectIncomeSheetUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -312,8 +318,8 @@ func (c *Finance) SelectIncomeSheet(req SelectIncomeSheetRequest) (result Select
 }
 
 type GetMonthCashFlowsStatementSheetRequest struct {
-	CustomerId    string `json:"customerId" form:"customerId"`
-	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
 }
 
 type GetMonthCashFlowsStatementSheetResponse struct {
@@ -368,9 +374,8 @@ func (c *Finance) GetMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatement
 }
 
 type SelectQuarterIncomeSheetRequest struct {
-	CustomerId     string `json:"customerId" form:"customerId"`
-	AccountPeriod  string `json:"accountPeriod" form:"accountPeriod"`
-	ReclassifyFlag string `json:"reclassifyFlag" form:"reclassifyFlag"`
+	CustomerId    string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
 }
 
 type SelectQuarterIncomeSheetResponse struct {
@@ -408,9 +413,11 @@ type SelectQuarterIncomeSheetList struct {
 
 // SelectQuarterIncomeSheet 利润表季报接口
 func (c *Finance) SelectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) (result SelectQuarterIncomeSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", SelectQuarterIncomeSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", SelectQuarterIncomeSheetUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -420,7 +427,6 @@ func (c *Finance) SelectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) 
 	c.setHeader(signature, httpRequest)
 	httpRequest.Header.Set("customerId", req.CustomerId)
 	httpRequest.Header.Set("accountPeriod", req.AccountPeriod)
-	httpRequest.Header.Set("reclassifyFlag", req.ReclassifyFlag)
 
 	client := &http.Client{}
 	response, err := client.Do(httpRequest)
@@ -442,9 +448,9 @@ func (c *Finance) SelectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) 
 }
 
 type GetAllYearMonthFinancialPositionStatementSheetRequest struct {
-	CustomerId     string `json:"customerId" form:"customerId"`
-	AccountPeriod  string `json:"accountPeriod" form:"accountPeriod"`
-	ReclassifyFlag string `json:"reclassifyFlag" form:"reclassifyFlag"`
+	CustomerId     string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod  string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
+	ReclassifyFlag string `json:"reclassifyFlag" form:"reclassifyFlag" url:"reclassifyFlag"`
 }
 
 type GetAllYearMonthFinancialPositionStatementSheetResponse struct {
@@ -482,9 +488,16 @@ type GetAllYearMonthFinancialPositionStatementSheetList struct {
 
 // GetAllYearMonthFinancialPositionStatementSheet 资产负债表全年接口
 func (c *Finance) GetAllYearMonthFinancialPositionStatementSheet(req GetAllYearMonthFinancialPositionStatementSheetRequest) (result GetAllYearMonthFinancialPositionStatementSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", GetAllYearMonthFinancialPositionStatementSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	hasRf := 1
+	if uriArr.Get("reclassifyFlag") == "" {
+		uriArr.Del("reclassifyFlag")
+		hasRf = 0
+	}
+	url := fmt.Sprintf("%v?%v", GetAllYearMonthFinancialPositionStatementSheetUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, &req.ReclassifyFlag, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -494,8 +507,9 @@ func (c *Finance) GetAllYearMonthFinancialPositionStatementSheet(req GetAllYearM
 	c.setHeader(signature, httpRequest)
 	httpRequest.Header.Set("customerId", req.CustomerId)
 	httpRequest.Header.Set("accountPeriod", req.AccountPeriod)
-	httpRequest.Header.Set("reclassifyFlag", req.ReclassifyFlag)
-
+	if hasRf == 1 {
+		httpRequest.Header.Set("reclassifyFlag", req.ReclassifyFlag)
+	}
 	client := &http.Client{}
 	response, err := client.Do(httpRequest)
 	defer response.Body.Close()
@@ -516,8 +530,8 @@ func (c *Finance) GetAllYearMonthFinancialPositionStatementSheet(req GetAllYearM
 }
 
 type GetAllYearMonthIncomeStatementSheetRequest struct {
-	CustomerId    string `json:"customerId" form:"customerId"`
-	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
 }
 
 type GetAllYearMonthIncomeStatementSheetResponse struct {
@@ -555,9 +569,11 @@ type GetAllYearMonthIncomeStatementSheetList struct {
 
 // GetAllYearMonthIncomeStatementSheet 利润表全年接口
 func (c *Finance) GetAllYearMonthIncomeStatementSheet(req GetAllYearMonthIncomeStatementSheetRequest) (result GetAllYearMonthIncomeStatementSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", GetAllYearMonthIncomeStatementSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", GetAllYearMonthIncomeStatementSheetUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -588,8 +604,8 @@ func (c *Finance) GetAllYearMonthIncomeStatementSheet(req GetAllYearMonthIncomeS
 }
 
 type GetAllYearMonthCashFlowsStatementSheetRequest struct {
-	CustomerId    string `json:"customerId" form:"customerId"`
-	AccountPeriod string `json:"accountPeriod" form:"accountPeriod"`
+	CustomerId    string `json:"customerId" form:"customerId" url:"customerId"`
+	AccountPeriod string `json:"accountPeriod" form:"accountPeriod" url:"accountPeriod"`
 }
 
 type GetAllYearMonthCashFlowsStatementSheetResponse struct {
@@ -611,9 +627,11 @@ type GetAllYearMonthCashFlowsStatementSheetList struct {
 
 // GetAllYearMonthCashFlowsStatementSheet 现金流量表全年接口
 func (c *Finance) GetAllYearMonthCashFlowsStatementSheet(req GetAllYearMonthCashFlowsStatementSheetRequest) (result GetAllYearMonthCashFlowsStatementSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", GetAllYearMonthCashFlowsStatementSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", GetAllYearMonthCashFlowsStatementSheetUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
