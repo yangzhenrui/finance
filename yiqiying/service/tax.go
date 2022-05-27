@@ -70,6 +70,8 @@ type GetTaxList struct {
 	Period                       string  `json:"period"`                       // 所属期
 	TotalNetProfit               float64 `json:"totalNetProfit"`               // 累计净利润
 	PreNetProfit                 float64 `json:"preNetProfit"`                 // 累计净利润
+	PeriodBegin                  string  `json:"periodBegin"`
+	PeriodEnd                    string  `json:"periodEnd"`
 }
 
 // GetTaxList 查询税种信息接口
