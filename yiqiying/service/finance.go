@@ -103,30 +103,30 @@ type QueryAccountBalanceSheetList struct {
 	AssistantName           string  `json:"assistantName"`
 	BeginDirection          int     `json:"beginDirection"`
 	BeginAmount             float64 `json:"beginAmount"`
-	BeginQuantity           int     `json:"beginQuantity"`
-	BeginUnitPrice          int     `json:"beginUnitPrice"`
+	BeginQuantity           float64 `json:"beginQuantity"`
+	BeginUnitPrice          float64 `json:"beginUnitPrice"`
 	BeginDebit              float64 `json:"beginDebit"`
-	BeginCredit             int     `json:"beginCredit"`
-	BeginDebitFcur          int     `json:"beginDebitFcur"`
-	BeginCreditFcur         int     `json:"beginCreditFcur"`
+	BeginCredit             float64 `json:"beginCredit"`
+	BeginDebitFcur          float64 `json:"beginDebitFcur"`
+	BeginCreditFcur         float64 `json:"beginCreditFcur"`
 	OccurredDebit           float64 `json:"occurredDebit"`
-	OccurredDebitQuantity   int     `json:"occurredDebitQuantity"`
-	OccurredDebitFcur       int     `json:"occurredDebitFcur"`
+	OccurredDebitQuantity   float64 `json:"occurredDebitQuantity"`
+	OccurredDebitFcur       float64 `json:"occurredDebitFcur"`
 	OccurredCredit          float64 `json:"occurredCredit"`
-	OccurredCreditQuantity  int     `json:"occurredCreditQuantity"`
-	OccurredCreditFcur      int     `json:"occurredCreditFcur"`
+	OccurredCreditQuantity  float64 `json:"occurredCreditQuantity"`
+	OccurredCreditFcur      float64 `json:"occurredCreditFcur"`
 	YearAccumulatedDebit    float64 `json:"yearAccumulatedDebit"`
 	YearAccumulatedCredit   float64 `json:"yearAccumulatedCredit"`
 	EndDebit                float64 `json:"endDebit"`
-	EndCredit               int     `json:"endCredit"`
-	EndDebitFcur            int     `json:"endDebitFcur"`
-	EndCreditFcur           int     `json:"endCreditFcur"`
+	EndCredit               float64 `json:"endCredit"`
+	EndDebitFcur            float64 `json:"endDebitFcur"`
+	EndCreditFcur           float64 `json:"endCreditFcur"`
 	EndDirection            int     `json:"endDirection"`
 	EndAmount               float64 `json:"endAmount"`
-	EndQuantity             int     `json:"endQuantity"`
-	EndUnitPrice            int     `json:"endUnitPrice"`
-	OccurredDebitUnitPrice  int     `json:"occurredDebitUnitPrice"`
-	OccurredCreditUnitPrice int     `json:"occurredCreditUnitPrice"`
+	EndQuantity             float64 `json:"endQuantity"`
+	EndUnitPrice            float64 `json:"endUnitPrice"`
+	OccurredDebitUnitPrice  float64 `json:"occurredDebitUnitPrice"`
+	OccurredCreditUnitPrice float64 `json:"occurredCreditUnitPrice"`
 }
 
 // QueryAccountBalanceSheet 科目余额表接口
