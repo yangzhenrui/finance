@@ -72,7 +72,7 @@ type CustomerList struct {
 	Status           int           `json:"status"`
 	CustomerType     int           `json:"customerType"`
 	Address          string        `json:"address"`
-	DepartmentId     string        `json:"departmentId"`
+	DepartmentId     int           `json:"departmentId"`
 	AccountList      []AccountList `json:"accountList"`
 }
 
@@ -175,7 +175,7 @@ type BatchAssignRolesRequest struct {
 }
 
 type RoleAssignmentList struct {
-	RelationShipType int      `json:"relationShipType"` // 类型, 1: 服务顾问, 2:其他服务人员, 3:税务会计,4:财务会计, 5:审核会计,6:收款负责人，7：客户经理，8：开票员
+	RelationShipType int      `json:"relationshipType"` // 类型, 1: 服务顾问, 2:其他服务人员, 3:税务会计,4:财务会计, 5:审核会计,6:收款负责人，7：客户经理，8：开票员
 	LoginNameList    []string `json:"loginNameList"`    // 人员列表(若为空,则表示删除)
 }
 
