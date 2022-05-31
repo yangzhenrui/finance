@@ -80,7 +80,7 @@ func (c *Alice) GetCloseInfo(req GetCloseInfoRequest) (result GetCloseInfoRespon
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("结账信息数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return

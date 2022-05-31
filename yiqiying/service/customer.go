@@ -78,7 +78,7 @@ type CustomerList struct {
 
 type AccountList struct {
 	AccountId        string `json:"accountId"`
-	RelationShipType int    `json:"relationShipType"`
+	RelationShipType int    `json:"relationshipType"`
 	LoginName        string `json:"loginName"`
 }
 
@@ -121,7 +121,7 @@ func (c *Customer) QueryCustomers(req QueryCustomersRequest) (result QueryCustom
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("查询三方平台客户信息,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -162,7 +162,7 @@ func (c *Customer) AddCustomer(req AddCustomerRequest) (result AddCustomerRespon
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("addCustomer error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("新增客户失败,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -209,7 +209,7 @@ func (c *Customer) BatchAssignRoles(req BatchAssignRolesRequest) (result BatchAs
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("addCustomer error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("三方平台批量分配出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -257,7 +257,7 @@ func (c *Customer) UpdateCustomer(req UpdateCustomerRequest) (result UpdateCusto
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("addCustomer error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("更新客户信息失败,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return

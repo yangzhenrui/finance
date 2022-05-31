@@ -116,7 +116,7 @@ func (c *Tax) GetTaxList(req GetTaxListRequest) (result GetTaxListResponse, err 
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("查询税种信息出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -226,7 +226,7 @@ func (c *Tax) GetReport(req GetReportRequest) (result GetReportResponse, err err
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("查询税种报表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return

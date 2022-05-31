@@ -154,7 +154,7 @@ func (c *Finance) QueryAccountBalanceSheet(req QueryAccountBalanceSheetRequest) 
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("科目余额表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -237,7 +237,7 @@ func (c *Finance) SelectAssetsDebtSheet(req SelectAssetsDebtSheetRequest) (resul
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("资产负债表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -311,7 +311,7 @@ func (c *Finance) SelectIncomeSheet(req SelectIncomeSheetRequest) (result Select
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("利润表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -367,7 +367,7 @@ func (c *Finance) GetMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatement
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("现金流量表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -441,7 +441,7 @@ func (c *Finance) SelectQuarterIncomeSheet(req SelectQuarterIncomeSheetRequest) 
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("利润表季报表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -523,7 +523,7 @@ func (c *Finance) GetAllYearMonthFinancialPositionStatementSheet(req GetAllYearM
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("资产负债表全年表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -597,7 +597,7 @@ func (c *Finance) GetAllYearMonthIncomeStatementSheet(req GetAllYearMonthIncomeS
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("利润表全年表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
@@ -655,7 +655,7 @@ func (c *Finance) GetAllYearMonthCashFlowsStatementSheet(req GetAllYearMonthCash
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
-		err = fmt.Errorf("queryCustomers error : errcode=%v , errmsg=%v, errdesc=%v", result.Head.Code, result.Head.Msg, result.Head.Description)
+		err = fmt.Errorf("现金流量表全年表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
