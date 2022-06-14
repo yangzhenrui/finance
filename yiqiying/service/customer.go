@@ -36,8 +36,8 @@ func NewCustomer(ctx *context.Context) *Customer {
 
 type QueryCustomersRequest struct {
 	CustomerIds          []string             `json:"customerIds,omitempty"`
-	PageNo               int                  `json:"pageNo"`
-	PageSize             int                  `json:"pageSize"`
+	PageNo               int                  `json:"pageNo" form:"pageNo"`
+	PageSize             int                  `json:"pageSize" form:"pageSize"`
 	CustomerLikeCriteria CustomerLikeCriteria `json:"customerLikeCriteria,omitempty"`
 }
 
