@@ -341,9 +341,10 @@ type GetMonthCashFlowsStatementSheetList struct {
 
 // GetMonthCashFlowsStatementSheet 现金流量表接口
 func (c *Finance) GetMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatementSheetRequest) (result GetMonthCashFlowsStatementSheetResponse, err error) {
-	financeReq, err := json.Marshal(&req)
-	reader := bytes.NewReader(financeReq)
-	httpRequest, err := http.NewRequest("GET", GetMonthCashFlowsStatementSheetUrl, reader)
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", GetMonthCashFlowsStatementSheetUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+	c.SignatureHandle = credential.NewDefaultSignature(&req.AccountPeriod, c.AppKey, c.AppSecret, &req.CustomerId, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
 	signature, err := c.GetSignature()
 	if err != nil {
 		return
@@ -364,6 +365,7 @@ func (c *Finance) GetMonthCashFlowsStatementSheet(req GetMonthCashFlowsStatement
 
 	err = json.Unmarshal(body, &result)
 	if err != nil {
+		err = fmt.Errorf("查无数据")
 		return
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {

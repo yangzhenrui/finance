@@ -70,8 +70,20 @@ type GetTaxList struct {
 	Period                       string  `json:"period"`                       // 所属期
 	TotalNetProfit               float64 `json:"totalNetProfit"`               // 累计净利润
 	PreNetProfit                 float64 `json:"preNetProfit"`                 // 累计净利润
-	PeriodBegin                  string  `json:"periodBegin"`
-	PeriodEnd                    string  `json:"periodEnd"`
+	PayStatus                    int     `json:"payStatus"`                    // 缴款状态(1:申报成功、2:申报成功 未缴款、3:缴款成功、4:部分缴款、5:申报成功 已缓缴)
+	PeriodBegin                  string  `json:"periodBegin"`                  // 所属期起 格式：yyyy-MM-dd。 例子：2020-10-01
+	PeriodEnd                    string  `json:"periodEnd"`                    // 所属期止 格式：yyyy-MM-dd。 例子：2020-10-01
+	PayAmt                       float64 `json:"payAmt"`                       // 缴税金额
+	CopyTaxState                 string  `json:"copyTaxState"`                 // 抄税状态
+	ClearCardState               string  `json:"clearCardState"`               // 清卡状态
+	Fjss                         []Fjss  `json:"fjss"`                         // 附加税应补退税额
+}
+
+// Fjss 附加税应补退税额
+type Fjss struct {
+	Zsxmdm string  `json:"zsxmdm"` // 征收项目代码
+	Name   string  `json:"name"`   // 附加税名称
+	Value  float64 `json:"value"`  // 附加税值
 }
 
 // GetTaxList 查询税种信息接口
