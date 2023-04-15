@@ -129,7 +129,9 @@ func (c *Customer) QueryCustomers(req QueryCustomersRequest) (result QueryCustom
 
 type AddCustomerRequest struct {
 	CustomerName      string `json:"customerName"`
+	FullName          string `json:"fullName"`
 	OperatorLoginName string `json:"operatorLoginName"`
+	CustomerNo        string `json:"customerNo"`
 }
 
 type AddCustomerResponse struct {
