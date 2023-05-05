@@ -24,6 +24,9 @@ const (
 
 	// UpdateCustomerUrl 更新客户信息接口
 	UpdateCustomerUrl = "https://openapi.17win.com/gateway/openyqdz/manage/customer/updateCustomer"
+
+	// UpdateCustomerStatusUrl 更新客户状态接口
+	UpdateCustomerStatusUrl = "https://openapi.17win.com/gateway/openyqdz/manage/customer/updateCustomerStatus"
 )
 
 type Customer struct {
@@ -260,6 +263,48 @@ func (c *Customer) UpdateCustomer(req UpdateCustomerRequest) (result UpdateCusto
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
 		err = fmt.Errorf("更新客户信息失败,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
+		return
+	}
+	return
+}
+
+type UpdateCustomerStatusRequest struct {
+	CustomerId        string `json:"customerId"`
+	OperatorLoginName string `json:"operatorLoginName"`
+	Status            int    `json:"status"`
+}
+
+type UpdateCustomerStatusResponse struct {
+	Head util.CommonError `json:"head"`
+	Body string           `json:"body"`
+}
+
+// UpdateCustomerStatus 更新客户状态
+func (c *Customer) UpdateCustomerStatus(req UpdateCustomerStatusRequest) (result UpdateCustomerStatusResponse, err error) {
+	customersReq, err := json.Marshal(&req)
+	reader := bytes.NewReader(customersReq)
+	httpRequest, err := http.NewRequest("POST", UpdateCustomerStatusUrl, reader)
+	c.SignatureHandle = credential.NewDefaultSignature(nil, c.AppKey, c.AppSecret, nil, nil, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
+	signature, err := c.GetSignature()
+	if err != nil {
+		return
+	}
+
+	c.setHeader(signature, httpRequest)
+	client := &http.Client{}
+	response, err := client.Do(httpRequest)
+	defer response.Body.Close()
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return
+	}
+	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
+		err = fmt.Errorf("更新客户状态失败,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
