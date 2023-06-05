@@ -18,6 +18,9 @@ const (
 
 	// GetReportUrl 查询税种报表数据接口
 	GetReportUrl = "https://openapi.17win.com/gateway/openyqdz/tax/info/getReport"
+
+	// GetTaxIdentificationUrl 查询税费种认定信息
+	GetTaxIdentificationUrl = "https://openapi.17win.com/gateway/openyqdz/tax/info/getTaxIdentification"
 )
 
 type Tax struct {
@@ -239,6 +242,90 @@ func (c *Tax) GetReport(req GetReportRequest) (result GetReportResponse, err err
 	}
 	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
 		err = fmt.Errorf("查询税种报表数据出错,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
+		return
+	}
+	return
+}
+
+type GetTaxIdentificationRequest struct {
+	CustomerId string `json:"customerId" url:"customerId"`
+	Period     string `json:"period" url:"period"`
+}
+
+type GetTaxIdentificationResponse struct {
+	Head util.CommonError    `json:"head"`
+	Body []TaxIdentification `json:"body"`
+}
+
+type TaxIdentification struct {
+	Id                        string        `json:"id"`
+	CustomerId                string        `json:"customerId"`                // 客户ID 备注: customerId
+	TaxIdentificationCode     string        `json:"taxIdentificationCode"`     // 税费种认定代码 备注: taxIdentificationCode
+	TaxIdentificationName     string        `json:"taxIdentificationName"`     // 税费种认定名称
+	TaxDeadlineType           string        `json:"taxDeadlineType"`           // 纳税期限类型 备注: MONTH("06", "1", "月报"), SEASON("08", "2", "季报"), HALF_YEAR("09", "3", "半年报"), YEAR("10", "4", "年报"), TIMES("11", "9", "次报"), UNKONWN("", "0", "未知");
+	TaxDeadlineTypeSelectable bool          `json:"taxDeadlineTypeSelectable"` // 纳税期限类型是否可选
+	TaxTypeConfig             TaxTypeConfig // 税种代码
+	ValidityStartDate         string        `json:"validityStartDate"` // 认定有效期起
+	ValidityEndDate           string        `json:"validityEndDate"`   // 认定有效期止
+	Executed                  bool          `json:"executed"`          // 是否已执行
+	Compulsory                bool          `json:"compulsory"`        // 是否必报
+	Deletable                 bool          `json:"deletable"`         // 是否可删除
+	RateOrTax                 float64       `json:"rateOrTax"`         // 税率或单位税额
+	LevyAgentMethod           string        `json:"levyAgentMethod"`   // 征收代理方式代码
+}
+
+type TaxTypeConfig struct {
+	Code                     string                   `json:"code"`                     // 税种代码
+	Name                     string                   `json:"name"`                     // 税种名称
+	TaxDeadlineType          string                   `json:"taxDeadlineType"`          // 纳税期限类型 备注: MONTH("06", "1", "月报"), SEASON("08", "2", "季报"), HALF_YEAR("09", "3", "半年报"), YEAR("10", "4", "年报"), TIMES("11", "9", "次报"), UNKONWN("", "0", "未知");
+	Companions               []Companions             `json:"companions"`               // 伴生税种
+	SupportExecutable        bool                     `json:"supportExecutable"`        // 是否支持已执行选项
+	AutoGenerate             bool                     `json:"autoGenerate"`             // 是否自动生成
+	AutoGenerateBasisType    string                   `json:"autoGenerateBasisType"`    // 自动生成依据类型
+	AutoGenerateBasis        string                   `json:"autoGenerateBasis"`        // 自动生成依据
+	TaxableCertificateConfig TaxableCertificateConfig `json:"taxableCertificateConfig"` // 应征凭证种类
+	Remark                   string                   `json:"remark"`                   // remark
+	CreateDate               int64                    `json:"createDate"`               // 创建时间
+}
+
+type Companions struct {
+}
+
+type TaxableCertificateConfig struct {
+	Code                string   `json:"code"` // 编码
+	Name                string   `json:"name"` // 名称
+	DeadlineTypeOptions []string `json:"deadlineTypeOptions"`
+}
+
+// GetTaxIdentification 查询税费种认定信息
+func (c *Tax) GetTaxIdentification(req GetTaxIdentificationRequest) (result GetTaxIdentificationResponse, err error) {
+	uriArr, _ := query.Values(req)
+	url := fmt.Sprintf("%v?%v", GetTaxIdentificationUrl, uriArr.Encode())
+	httpRequest, err := http.NewRequest("GET", url, nil)
+
+	c.SignatureHandle = credential.NewDefaultSignature(nil, c.AppKey, c.AppSecret, &req.CustomerId, &req.Period, nil, nil, c.Timestamp, c.Version, c.XReqNonce, credential.CacheKeyYiQiYingPrefix, c.Cache)
+	signature, err := c.GetSignature()
+	if err != nil {
+		return
+	}
+
+	// 请求头设置
+	c.setHeader(signature, httpRequest)
+	httpRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := &http.Client{}
+	response, err := client.Do(httpRequest)
+	defer response.Body.Close()
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return
+	}
+	if result.Head.Status != "Y" || result.Head.Code != "00000000" {
+		err = fmt.Errorf("查询税费种认定信息,%v,%v 出错代码为(%v)", result.Head.Msg, result.Head.Description, result.Head.Code)
 		return
 	}
 	return
